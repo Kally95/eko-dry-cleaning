@@ -80,8 +80,12 @@ async function main() {
 
   // Create sites for Securicorp
   await prisma.site.upsert({
-    where: { id: 'site-canary-wharf' },
-    update: {},
+    where: { pin: '1234' },
+    update: {
+      name: 'Canary Wharf Tower',
+      address: '1 Canada Square, Canary Wharf, London E14 5AB',
+      companyId: securicorp.id,
+    },
     create: {
       id: 'site-canary-wharf',
       name: 'Canary Wharf Tower',
@@ -92,8 +96,12 @@ async function main() {
   });
 
   await prisma.site.upsert({
-    where: { id: 'site-the-shard' },
-    update: {},
+    where: { pin: '5678' },
+    update: {
+      name: 'The Shard',
+      address: '32 London Bridge Street, London SE1 9SG',
+      companyId: securicorp.id,
+    },
     create: {
       id: 'site-the-shard',
       name: 'The Shard',
@@ -105,8 +113,12 @@ async function main() {
 
   // Create sites for Fortress
   await prisma.site.upsert({
-    where: { id: 'site-liverpool-street' },
-    update: {},
+    where: { pin: '9012' },
+    update: {
+      name: 'Liverpool Street Station',
+      address: 'Liverpool Street, London EC2M 7QH',
+      companyId: fortress.id,
+    },
     create: {
       id: 'site-liverpool-street',
       name: 'Liverpool Street Station',
@@ -118,8 +130,12 @@ async function main() {
 
   // Create sites for CityWatch
   await prisma.site.upsert({
-    where: { id: 'site-waterloo' },
-    update: {},
+    where: { pin: '3456' },
+    update: {
+      name: 'Waterloo Station',
+      address: 'Waterloo Road, London SE1 8SW',
+      companyId: citywatch.id,
+    },
     create: {
       id: 'site-waterloo',
       name: 'Waterloo Station',
