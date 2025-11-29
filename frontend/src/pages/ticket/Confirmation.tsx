@@ -95,15 +95,41 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
   const handlePrint = async () => {
     if (!confirmed) return;
 
-    // If order hasn't been created yet, create it first
-    if (!previewOrder) {
-      await handleSubmit(false);
-    }
+    try {
+      setLoading(true);
+      setError('');
 
-    if (previewOrder) {
-      await api.recordPrint(previewOrder.id);
+      // If order hasn't been created yet, create it first
+      let orderToPrint = previewOrder;
+
+      if (!orderToPrint) {
+        const orderData = {
+          createdBy: mode!,
+          companyId: selectedCompany!.id,
+          siteId: selectedSite!.id,
+          sitePin: sitePin,
+          firstName,
+          lastName,
+          customerPhone,
+          customerEmail,
+          notes: notes || undefined,
+          items,
+        };
+
+        orderToPrint = await api.createOrder(orderData);
+        setCreatedOrder(orderToPrint);
+        setPreviewOrder(orderToPrint);
+      }
+
+      // Record print and trigger print dialog
+      await api.recordPrint(orderToPrint.id);
       setPrintTriggered(true);
       window.print();
+    } catch (err: any) {
+      setError(err.message || 'Failed to print ticket. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,6 +139,12 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
     try {
       setLoading(true);
       setError('');
+
+      // If order already exists, just navigate
+      if (previewOrder && shouldNavigate) {
+        onNext();
+        return;
+      }
 
       const orderData = {
         createdBy: mode!,
@@ -131,7 +163,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
       setCreatedOrder(order);
       setPreviewOrder(order);
 
-      if (shouldNavigate && printTriggered) {
+      if (shouldNavigate) {
         onNext();
       }
     } catch (err: any) {
