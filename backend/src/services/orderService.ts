@@ -1,5 +1,5 @@
 import { PrismaClient, CreatedBy, OrderStatus } from '@prisma/client';
-import { generateTicketReference } from '../utils/ticketReference';
+import { generateTicketReference, extractSequenceNumber } from '../utils/ticketReference';
 
 const prisma = new PrismaClient();
 
@@ -45,13 +45,14 @@ export class OrderService {
 
     let sequenceNumber = 1;
     if (lastOrder) {
-      const match = lastOrder.ticketReference.match(/^EKO-\d{4}-(\d{6})$/);
-      if (match) {
-        sequenceNumber = parseInt(match[1], 10) + 1;
+      // Try to extract sequence from either old or new format
+      const extracted = extractSequenceNumber(lastOrder.ticketReference);
+      if (extracted !== null) {
+        sequenceNumber = extracted + 1;
       }
     }
 
-    const ticketReference = generateTicketReference(sequenceNumber);
+    const ticketReference = generateTicketReference(data.lastName, sequenceNumber);
 
     // Create order with items
     const order = await prisma.order.create({
