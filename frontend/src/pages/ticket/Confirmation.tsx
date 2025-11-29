@@ -95,6 +95,12 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
   const handlePrint = async () => {
     if (!confirmed) return;
 
+    // Check for required data
+    if (!selectedCompany || !selectedSite) {
+      setError('Site information is missing. Please go back and try again.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
@@ -105,8 +111,8 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
       if (!orderToPrint) {
         const orderData = {
           createdBy: mode!,
-          companyId: selectedCompany!.id,
-          siteId: selectedSite!.id,
+          companyId: selectedCompany.id,
+          siteId: selectedSite.id,
           sitePin: sitePin,
           firstName,
           lastName,
