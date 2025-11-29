@@ -1,0 +1,170 @@
+// Prisma schema for EKO Dry Cleaning ticketing system
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin users who can access the admin panel
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed with bcrypt
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Audit trail
+  orderChanges OrderChangeLog[]
+}
+
+// Companies that use the dry cleaning service
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sites  Site[]
+  orders Order[]
+}
+
+// Physical locations/sites for each company
+model Site {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  pin       String   // Numeric PIN for site access
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+
+  @@index([companyId])
+}
+
+// Order/ticket statuses
+enum OrderStatus {
+  SUBMITTED
+  IN_CLEANING
+  READY_FOR_COLLECTION
+  COLLECTED
+  CANCELLED
+}
+
+// Who created the order
+enum CreatedBy {
+  CUSTOMER
+  STAFF
+}
+
+// Main order/ticket
+model Order {
+  id                String      @id @default(cuid())
+  ticketReference   String      @unique // e.g., "EKO-2024-001234"
+  status            OrderStatus @default(SUBMITTED)
+  createdBy         CreatedBy
+  staffUserId       String?     // If created by staff, which staff member (optional)
+
+  // Company and site info
+  companyId         String
+  company           Company     @relation(fields: [companyId], references: [id])
+  siteId            String
+  site              Site        @relation(fields: [siteId], references: [id])
+
+  // Customer details
+  customerName      String
+  customerPhone     String
+  customerEmail     String
+
+  // Order details
+  notes             String?     @db.Text
+
+  // PIN validation
+  pinValidated      Boolean     @default(false)
+  pinValidatedAt    DateTime?
+
+  // Print tracking
+  printTriggered    Boolean     @default(false)
+  printTriggeredAt  DateTime?
+  printCount        Int         @default(0)
+
+  // Timestamps
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  // Relations
+  items             OrderItem[]
+  printLogs         PrintLog[]
+  changeLogs        OrderChangeLog[]
+
+  @@index([companyId])
+  @@index([siteId])
+  @@index([ticketReference])
+  @@index([customerEmail])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Garment types available for ordering
+model GarmentType {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  displayOrder Int        @default(0) // For sorting in UI
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  orderItems  OrderItem[]
+}
+
+// Individual items in an order
+model OrderItem {
+  id            String       @id @default(cuid())
+  orderId       String
+  order         Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  garmentTypeId String
+  garmentType   GarmentType  @relation(fields: [garmentTypeId], references: [id])
+  quantity      Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([orderId])
+  @@index([garmentTypeId])
+}
+
+// Track when tickets are printed
+model PrintLog {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  printedAt DateTime @default(now())
+  printedBy String?  // IP address or user identifier
+
+  @@index([orderId])
+}
+
+// Change/audit log for orders
+model OrderChangeLog {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  field       String   // Which field was changed
+  oldValue    String?  @db.Text
+  newValue    String?  @db.Text
+  changeType  String   // e.g., "UPDATE", "STATUS_CHANGE", "CREATE"
+
+  createdAt   DateTime @default(now())
+
+  @@index([orderId])
+  @@index([createdAt])
+}
