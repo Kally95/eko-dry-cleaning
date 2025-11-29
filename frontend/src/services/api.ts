@@ -15,6 +15,10 @@ export interface Site {
   companyId: string;
 }
 
+export interface SiteWithCompany extends Site {
+  company: Company;
+}
+
 export interface GarmentType {
   id: string;
   name: string;
@@ -89,6 +93,19 @@ class ApiService {
       body: JSON.stringify({ siteId, pin }),
     });
     if (!response.ok) throw new Error('Failed to verify PIN');
+    return response.json();
+  }
+
+  async loginWithPin(pin: string): Promise<SiteWithCompany> {
+    const response = await fetch(`${this.baseUrl}/api/auth/pin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin }),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Invalid PIN');
+    }
     return response.json();
   }
 

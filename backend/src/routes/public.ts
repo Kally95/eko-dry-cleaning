@@ -7,6 +7,7 @@ const router = Router();
 router.get('/companies', (req, res) => publicController.getCompanies(req, res));
 router.get('/companies/:companyId/sites', (req, res) => publicController.getSites(req, res));
 router.post('/sites/verify-pin', (req, res) => publicController.verifySitePin(req, res));
+router.post('/auth/pin', (req, res) => publicController.loginWithPin(req, res)); // New PIN-based login
 router.get('/garment-types', (req, res) => publicController.getGarmentTypes(req, res));
 router.post('/orders', (req, res) => publicController.createOrder(req, res));
 router.get('/orders/:orderId', (req, res) => publicController.getOrder(req, res));

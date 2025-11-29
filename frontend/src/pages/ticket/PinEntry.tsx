@@ -11,7 +11,7 @@ interface PinEntryProps {
 }
 
 export const PinEntry: React.FC<PinEntryProps> = ({ onNext, onBack }) => {
-  const { mode, selectedCompany, selectedSite, setSitePin, setPinVerified } = useTicketStore();
+  const { mode, setSelectedCompany, setSelectedSite, setSitePin, setPinVerified } = useTicketStore();
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,23 +20,29 @@ export const PinEntry: React.FC<PinEntryProps> = ({ onNext, onBack }) => {
     e.preventDefault();
     setError('');
 
-    if (!selectedSite) return;
+    if (!pin.trim()) {
+      setError('Please enter a PIN');
+      return;
+    }
 
     try {
       setLoading(true);
-      const result = await api.verifySitePin(selectedSite.id, pin);
+      const siteData = await api.loginWithPin(pin);
 
-      if (result.valid) {
-        setSitePin(pin); // Store the verified PIN
-        setPinVerified(true);
-        onNext();
-      } else {
-        setError('Invalid PIN. Please try again or contact site staff.');
-        setPin('');
-      }
-    } catch (err) {
-      setError('Failed to verify PIN. Please try again.');
-      console.error(err);
+      // Set the site and company from the PIN login response
+      setSelectedSite({
+        id: siteData.id,
+        name: siteData.name,
+        address: siteData.address,
+        companyId: siteData.companyId,
+      });
+      setSelectedCompany(siteData.company);
+      setSitePin(pin); // Store the verified PIN
+      setPinVerified(true);
+      onNext();
+    } catch (err: any) {
+      setError(err.message || 'Invalid PIN. Please try again or contact site staff.');
+      setPin('');
     } finally {
       setLoading(false);
     }
@@ -45,32 +51,23 @@ export const PinEntry: React.FC<PinEntryProps> = ({ onNext, onBack }) => {
   const isCustomerMode = mode === 'CUSTOMER';
 
   return (
-    <Layout title="Site Access PIN">
+    <Layout title="Site Access">
       <div className="space-y-6">
-        <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-          <div>
-            <p className="text-sm text-gray-600">Company</p>
-            <p className="font-semibold">{selectedCompany?.name}</p>
+        <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-5">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-3xl">🔐</span>
+            <h3 className="font-bold text-blue-900 text-lg">PIN Required</h3>
           </div>
-          <div>
-            <p className="text-sm text-gray-600">Site</p>
-            <p className="font-semibold">{selectedSite?.name}</p>
-          </div>
+          {isCustomerMode ? (
+            <p className="text-blue-900">
+              Please enter your site PIN to continue. If you don't know it, ask your local reception or security staff.
+            </p>
+          ) : (
+            <p className="text-blue-900">
+              Please enter the site PIN to access this location's ticketing system.
+            </p>
+          )}
         </div>
-
-        {isCustomerMode ? (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-gray-700">
-              Please enter the site PIN. If you don't know it, please ask your local reception or security staff.
-            </p>
-          </div>
-        ) : (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-gray-700">
-              Please enter the site PIN to continue.
-            </p>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input

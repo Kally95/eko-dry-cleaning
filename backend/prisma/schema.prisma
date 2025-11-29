@@ -38,7 +38,7 @@ model Site {
   id        String   @id @default(cuid())
   name      String
   address   String
-  pin       String   // Numeric PIN for site access
+  pin       String   @unique // Numeric PIN for site access (must be unique across all sites)
   companyId String
   company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

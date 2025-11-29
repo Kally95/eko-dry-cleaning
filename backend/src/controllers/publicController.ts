@@ -74,7 +74,7 @@ export class PublicController {
   }
 
   /**
-   * Verify site PIN
+   * Verify site PIN (legacy - for existing flow)
    */
   async verifySitePin(req: Request, res: Response) {
     try {
@@ -98,6 +98,38 @@ export class PublicController {
     } catch (error) {
       console.error('Error verifying PIN:', error);
       res.status(500).json({ error: 'Failed to verify PIN' });
+    }
+  }
+
+  /**
+   * Login with PIN only - returns site and company information
+   * This is the new PIN-based login that doesn't require selecting company/site first
+   */
+  async loginWithPin(req: Request, res: Response) {
+    try {
+      const { pin } = req.body;
+
+      if (!pin) {
+        return res.status(400).json({ error: 'PIN is required' });
+      }
+
+      const site = await prisma.site.findUnique({
+        where: { pin },
+        include: {
+          company: true,
+        },
+      });
+
+      if (!site) {
+        return res.status(401).json({ error: 'Invalid PIN' });
+      }
+
+      // Return site and company information (without the PIN)
+      const { pin: _, ...siteWithoutPin } = site;
+      res.json(siteWithoutPin);
+    } catch (error) {
+      console.error('Error logging in with PIN:', error);
+      res.status(500).json({ error: 'Failed to login' });
     }
   }
 
