@@ -16,12 +16,14 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onNext, onBack }) => {
     mode,
     selectedCompany,
     selectedSite,
-    customerName,
+    firstName,
+    lastName,
     customerPhone,
     customerEmail,
     notes,
     garmentQuantities,
-    setCustomerName,
+    setFirstName,
+    setLastName,
     setCustomerPhone,
     setCustomerEmail,
     setNotes,
@@ -55,8 +57,11 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onNext, onBack }) => {
   const validate = () => {
     const errors: Record<string, string> = {};
 
-    if (!customerName.trim()) {
-      errors.customerName = 'Name is required';
+    if (!firstName.trim()) {
+      errors.firstName = 'First name is required';
+    }
+    if (!lastName.trim()) {
+      errors.lastName = 'Last name is required';
     }
     if (!customerPhone.trim()) {
       errors.customerPhone = 'Phone number is required';
@@ -123,13 +128,22 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onNext, onBack }) => {
             <div>
               <h3 className="font-semibold text-lg mb-4">{customerLabel}</h3>
               <div className="space-y-4">
-                <Input
-                  label="Full Name"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  error={validationErrors.customerName}
-                  required
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    error={validationErrors.firstName}
+                    required
+                  />
+                  <Input
+                    label="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    error={validationErrors.lastName}
+                    required
+                  />
+                </div>
                 <Input
                   label="Phone Number"
                   type="tel"

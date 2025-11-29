@@ -19,12 +19,14 @@ interface TicketState {
   setPinVerified: (verified: boolean) => void;
 
   // Order form data
-  customerName: string;
+  firstName: string;
+  lastName: string;
   customerPhone: string;
   customerEmail: string;
   notes: string;
   garmentQuantities: Record<string, number>;
-  setCustomerName: (name: string) => void;
+  setFirstName: (name: string) => void;
+  setLastName: (name: string) => void;
   setCustomerPhone: (phone: string) => void;
   setCustomerEmail: (email: string) => void;
   setNotes: (notes: string) => void;
@@ -46,7 +48,8 @@ const initialState = {
   selectedSite: null,
   sitePin: '',
   pinVerified: false,
-  customerName: '',
+  firstName: '',
+  lastName: '',
   customerPhone: '',
   customerEmail: '',
   notes: '',
@@ -67,7 +70,9 @@ export const useTicketStore = create<TicketState>((set) => ({
 
   setPinVerified: (verified) => set({ pinVerified: verified }),
 
-  setCustomerName: (name) => set({ customerName: name }),
+  setFirstName: (name) => set({ firstName: name }),
+
+  setLastName: (name) => set({ lastName: name }),
 
   setCustomerPhone: (phone) => set({ customerPhone: phone }),
 
@@ -87,7 +92,8 @@ export const useTicketStore = create<TicketState>((set) => ({
 
   resetForm: () =>
     set({
-      customerName: '',
+      firstName: '',
+      lastName: '',
       customerPhone: '',
       customerEmail: '',
       notes: '',
@@ -102,7 +108,8 @@ export const useTicketStore = create<TicketState>((set) => ({
       selectedSite: null,
       sitePin: '',
       pinVerified: false,
-      customerName: '',
+      firstName: '',
+      lastName: '',
       customerPhone: '',
       customerEmail: '',
       notes: '',

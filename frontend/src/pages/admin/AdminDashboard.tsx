@@ -216,7 +216,7 @@ export const AdminDashboard: React.FC = () => {
                             {order.ticketReference}
                           </td>
                           <td className="px-6 py-4">
-                            <div className="text-sm font-medium">{order.customerName}</div>
+                            <div className="text-sm font-medium">{order.firstName} {order.lastName}</div>
                             <div className="text-sm text-gray-500">{order.customerEmail}</div>
                           </td>
                           <td className="px-6 py-4">

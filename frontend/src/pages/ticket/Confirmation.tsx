@@ -16,7 +16,8 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
     selectedCompany,
     selectedSite,
     sitePin,
-    customerName,
+    firstName,
+    lastName,
     customerPhone,
     customerEmail,
     notes,
@@ -65,7 +66,8 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
       createdBy: mode,
       company: selectedCompany,
       site: selectedSite,
-      customerName,
+      firstName,
+      lastName,
       customerPhone,
       customerEmail,
       notes,
@@ -117,7 +119,8 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
         companyId: selectedCompany.id,
         siteId: selectedSite.id,
         sitePin: sitePin,
-        customerName,
+        firstName,
+        lastName,
         customerPhone,
         customerEmail,
         notes: notes || undefined,
@@ -179,7 +182,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
 
           <div>
             <h3 className="font-semibold text-lg mb-2">Customer</h3>
-            <p>{customerName}</p>
+            <p>{firstName} {lastName}</p>
             <p className="text-sm">{customerPhone}</p>
             <p className="text-sm">{customerEmail}</p>
           </div>

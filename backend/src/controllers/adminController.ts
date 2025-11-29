@@ -14,7 +14,8 @@ const loginSchema = z.object({
 });
 
 const updateOrderSchema = z.object({
-  customerName: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
   customerPhone: z.string().optional(),
   customerEmail: z.string().email().optional(),
   notes: z.string().optional(),

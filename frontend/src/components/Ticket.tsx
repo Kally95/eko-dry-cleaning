@@ -44,7 +44,7 @@ export const Ticket: React.FC<TicketProps> = ({ order }) => {
       {/* Customer Details */}
       <div className="mb-6">
         <h2 className="text-lg font-bold mb-2">Customer Details</h2>
-        <p><span className="font-semibold">Name:</span> {order.customerName}</p>
+        <p><span className="font-semibold">Name:</span> {order.firstName} {order.lastName}</p>
         <p><span className="font-semibold">Phone:</span> {order.customerPhone}</p>
         <p><span className="font-semibold">Email:</span> {order.customerEmail}</p>
       </div>

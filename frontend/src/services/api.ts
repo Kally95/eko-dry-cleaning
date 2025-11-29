@@ -36,7 +36,8 @@ export interface Order {
   createdBy: 'CUSTOMER' | 'STAFF';
   company: Company;
   site: Site;
-  customerName: string;
+  firstName: string;
+  lastName: string;
   customerPhone: string;
   customerEmail: string;
   notes?: string;
@@ -54,7 +55,8 @@ export interface CreateOrderData {
   companyId: string;
   siteId: string;
   sitePin: string;
-  customerName: string;
+  firstName: string;
+  lastName: string;
   customerPhone: string;
   customerEmail: string;
   notes?: string;

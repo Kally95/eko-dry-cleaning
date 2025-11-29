@@ -69,7 +69,7 @@ export const Success: React.FC<SuccessProps> = ({ onNewTicketSameSite, onChangeS
 
           <div>
             <p className="text-sm text-gray-600">Customer</p>
-            <p className="font-semibold">{createdOrder.customerName}</p>
+            <p className="font-semibold">{createdOrder.firstName} {createdOrder.lastName}</p>
             <p className="text-sm">{createdOrder.customerEmail}</p>
           </div>
 

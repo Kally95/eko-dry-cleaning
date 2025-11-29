@@ -18,7 +18,8 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({ order: initialOrder, o
   const [error, setError] = useState('');
 
   // Edit form state
-  const [customerName, setCustomerName] = useState(order.customerName);
+  const [firstName, setFirstName] = useState(order.firstName);
+  const [lastName, setLastName] = useState(order.lastName);
   const [customerPhone, setCustomerPhone] = useState(order.customerPhone);
   const [customerEmail, setCustomerEmail] = useState(order.customerEmail);
   const [notes, setNotes] = useState(order.notes || '');
@@ -34,7 +35,8 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({ order: initialOrder, o
       setError('');
 
       const updatedOrder = await api.updateOrder(token, order.id, {
-        customerName,
+        firstName,
+        lastName,
         customerPhone,
         customerEmail,
         notes: notes || undefined,
@@ -52,7 +54,8 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({ order: initialOrder, o
   };
 
   const handleCancelEdit = () => {
-    setCustomerName(order.customerName);
+    setFirstName(order.firstName);
+    setLastName(order.lastName);
     setCustomerPhone(order.customerPhone);
     setCustomerEmail(order.customerEmail);
     setNotes(order.notes || '');
@@ -180,12 +183,20 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({ order: initialOrder, o
               <div className="space-y-4">
                 {editing ? (
                   <>
-                    <Input
-                      label="Name"
-                      value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
-                      required
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="First Name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                      />
+                      <Input
+                        label="Last Name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                      />
+                    </div>
                     <Input
                       label="Phone"
                       value={customerPhone}
@@ -206,7 +217,7 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({ order: initialOrder, o
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Name
                       </label>
-                      <p>{order.customerName}</p>
+                      <p>{order.firstName} {order.lastName}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">

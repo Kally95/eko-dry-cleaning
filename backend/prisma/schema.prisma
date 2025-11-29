@@ -79,7 +79,8 @@ model Order {
   site              Site        @relation(fields: [siteId], references: [id])
 
   // Customer details
-  customerName      String
+  firstName         String
+  lastName          String
   customerPhone     String
   customerEmail     String
 

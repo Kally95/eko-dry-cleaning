@@ -8,7 +8,8 @@ export interface CreateOrderData {
   staffUserId?: string;
   companyId: string;
   siteId: string;
-  customerName: string;
+  firstName: string;
+  lastName: string;
   customerPhone: string;
   customerEmail: string;
   notes?: string;
@@ -19,7 +20,8 @@ export interface CreateOrderData {
 }
 
 export interface UpdateOrderData {
-  customerName?: string;
+  firstName?: string;
+  lastName?: string;
   customerPhone?: string;
   customerEmail?: string;
   notes?: string;
@@ -59,7 +61,8 @@ export class OrderService {
         staffUserId: data.staffUserId,
         companyId: data.companyId,
         siteId: data.siteId,
-        customerName: data.customerName,
+        firstName: data.firstName,
+        lastName: data.lastName,
         customerPhone: data.customerPhone,
         customerEmail: data.customerEmail,
         notes: data.notes,
@@ -189,7 +192,11 @@ export class OrderService {
       where.ticketReference = { contains: filters.ticketReference, mode: 'insensitive' };
     }
     if (filters.customerName) {
-      where.customerName = { contains: filters.customerName, mode: 'insensitive' };
+      // Search in both firstName and lastName
+      where.OR = [
+        { firstName: { contains: filters.customerName, mode: 'insensitive' } },
+        { lastName: { contains: filters.customerName, mode: 'insensitive' } },
+      ];
     }
     if (filters.customerEmail) {
       where.customerEmail = { contains: filters.customerEmail, mode: 'insensitive' };
@@ -251,13 +258,23 @@ export class OrderService {
     const changeLogs: any[] = [];
 
     // Track changes
-    if (data.customerName && data.customerName !== existingOrder.customerName) {
+    if (data.firstName && data.firstName !== existingOrder.firstName) {
       changeLogs.push({
         orderId,
         adminUserId,
-        field: 'customerName',
-        oldValue: existingOrder.customerName,
-        newValue: data.customerName,
+        field: 'firstName',
+        oldValue: existingOrder.firstName,
+        newValue: data.firstName,
+        changeType: 'UPDATE',
+      });
+    }
+    if (data.lastName && data.lastName !== existingOrder.lastName) {
+      changeLogs.push({
+        orderId,
+        adminUserId,
+        field: 'lastName',
+        oldValue: existingOrder.lastName,
+        newValue: data.lastName,
         changeType: 'UPDATE',
       });
     }
@@ -304,7 +321,8 @@ export class OrderService {
 
     // Update order
     const updateData: any = {};
-    if (data.customerName) updateData.customerName = data.customerName;
+    if (data.firstName) updateData.firstName = data.firstName;
+    if (data.lastName) updateData.lastName = data.lastName;
     if (data.customerPhone) updateData.customerPhone = data.customerPhone;
     if (data.customerEmail) updateData.customerEmail = data.customerEmail;
     if (data.notes !== undefined) updateData.notes = data.notes;

@@ -9,26 +9,42 @@ export const DualTicket: React.FC<DualTicketProps> = ({ order }) => {
   const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
 
   const TicketCopy = ({ copyType }: { copyType: 'CUSTOMER' | 'STAFF' }) => (
-    <div className="ticket-copy border-2 border-gray-900 p-6">
+    <div className="ticket-copy" style={{
+      border: '2px solid #000',
+      padding: '16px',
+      pageBreakInside: 'avoid'
+    }}>
       {/* Header */}
-      <div className="border-b-2 border-gray-900 pb-3 mb-4">
-        <h1 className="text-2xl font-bold text-center">EKO DRY CLEANING</h1>
-        <p className="text-center text-sm font-semibold mt-1">Uniform Service Ticket</p>
-        <p className="text-center text-xs font-bold mt-1 bg-gray-900 text-white py-1">
+      <div style={{ borderBottom: '2px solid #000', paddingBottom: '8px', marginBottom: '12px' }}>
+        <h1 style={{ fontSize: '20px', fontWeight: 'bold', textAlign: 'center', margin: 0 }}>
+          EKO DRY CLEANING
+        </h1>
+        <p style={{ textAlign: 'center', fontSize: '12px', fontWeight: '600', marginTop: '4px', marginBottom: '4px' }}>
+          Uniform Service Ticket
+        </p>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '10px',
+          fontWeight: 'bold',
+          marginTop: '4px',
+          backgroundColor: '#000',
+          color: '#fff',
+          padding: '4px'
+        }}>
           {copyType} COPY
         </p>
       </div>
 
       {/* Ticket Reference */}
-      <div className="mb-3">
-        <p className="text-xs text-gray-600">Ticket Reference</p>
-        <p className="text-xl font-bold">{order.ticketReference}</p>
+      <div style={{ marginBottom: '8px' }}>
+        <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>Ticket Reference</p>
+        <p style={{ fontSize: '18px', fontWeight: 'bold', margin: 0 }}>{order.ticketReference}</p>
       </div>
 
       {/* Date */}
-      <div className="mb-3">
-        <p className="text-xs text-gray-600">Date & Time</p>
-        <p className="text-sm font-semibold">
+      <div style={{ marginBottom: '8px' }}>
+        <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>Date & Time</p>
+        <p style={{ fontSize: '12px', fontWeight: '600', margin: 0 }}>
           {new Date(order.createdAt).toLocaleString('en-GB', {
             dateStyle: 'short',
             timeStyle: 'short',
@@ -37,36 +53,38 @@ export const DualTicket: React.FC<DualTicketProps> = ({ order }) => {
       </div>
 
       {/* Location */}
-      <div className="mb-3">
-        <p className="text-xs text-gray-600 font-semibold">Location</p>
-        <p className="text-sm font-semibold">{order.company.name}</p>
-        <p className="text-sm">{order.site.name}</p>
-        <p className="text-xs text-gray-600">{order.site.address}</p>
+      <div style={{ marginBottom: '8px' }}>
+        <p style={{ fontSize: '10px', color: '#666', fontWeight: '600', marginBottom: '2px' }}>Location</p>
+        <p style={{ fontSize: '12px', fontWeight: '600', margin: 0 }}>{order.company.name}</p>
+        <p style={{ fontSize: '12px', margin: 0 }}>{order.site.name}</p>
+        <p style={{ fontSize: '10px', color: '#666', margin: 0 }}>{order.site.address}</p>
       </div>
 
       {/* Customer */}
-      <div className="mb-3">
-        <p className="text-xs text-gray-600 font-semibold">Customer</p>
-        <p className="text-sm font-semibold">{order.customerName}</p>
-        <p className="text-xs">{order.customerPhone}</p>
-        <p className="text-xs">{order.customerEmail}</p>
+      <div style={{ marginBottom: '8px' }}>
+        <p style={{ fontSize: '10px', color: '#666', fontWeight: '600', marginBottom: '2px' }}>Customer</p>
+        <p style={{ fontSize: '12px', fontWeight: '600', margin: 0 }}>{order.firstName} {order.lastName}</p>
+        <p style={{ fontSize: '10px', margin: 0 }}>{order.customerPhone}</p>
+        <p style={{ fontSize: '10px', margin: 0 }}>{order.customerEmail}</p>
       </div>
 
       {/* Items */}
-      <div className="mb-3">
-        <p className="text-xs text-gray-600 font-semibold mb-1">Items ({totalItems} total)</p>
-        <table className="w-full text-xs">
-          <thead className="border-b border-gray-400">
-            <tr>
-              <th className="text-left py-1">Item</th>
-              <th className="text-right py-1">Qty</th>
+      <div style={{ marginBottom: '8px' }}>
+        <p style={{ fontSize: '10px', color: '#666', fontWeight: '600', marginBottom: '4px' }}>
+          Items ({totalItems} total)
+        </p>
+        <table style={{ width: '100%', fontSize: '10px', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid #999' }}>
+              <th style={{ textAlign: 'left', padding: '4px 0' }}>Item</th>
+              <th style={{ textAlign: 'right', padding: '4px 0' }}>Qty</th>
             </tr>
           </thead>
           <tbody>
             {order.items.map((item) => (
-              <tr key={item.id} className="border-b border-gray-200">
-                <td className="py-1">{item.garmentType.name}</td>
-                <td className="text-right py-1">{item.quantity}</td>
+              <tr key={item.id} style={{ borderBottom: '1px solid #ddd' }}>
+                <td style={{ padding: '4px 0' }}>{item.garmentType.name}</td>
+                <td style={{ textAlign: 'right', padding: '4px 0' }}>{item.quantity}</td>
               </tr>
             ))}
           </tbody>
@@ -75,18 +93,22 @@ export const DualTicket: React.FC<DualTicketProps> = ({ order }) => {
 
       {/* Notes */}
       {order.notes && (
-        <div className="mb-3">
-          <p className="text-xs text-gray-600 font-semibold">Notes / Alterations</p>
-          <div className="text-xs bg-gray-50 p-2 rounded whitespace-pre-wrap">
+        <div style={{ marginBottom: '8px' }}>
+          <p style={{ fontSize: '10px', color: '#666', fontWeight: '600', marginBottom: '2px' }}>
+            Notes / Alterations
+          </p>
+          <div style={{ fontSize: '10px', backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
             {order.notes}
           </div>
         </div>
       )}
 
       {/* Important Notice */}
-      <div className="border-2 border-red-500 p-2 mt-3">
-        <p className="font-bold text-center text-xs">⚠️ IMPORTANT</p>
-        <p className="text-center text-xs">
+      <div style={{ border: '2px solid #ef4444', padding: '8px', marginTop: '8px' }}>
+        <p style={{ fontWeight: 'bold', textAlign: 'center', fontSize: '10px', margin: 0 }}>
+          ⚠️ IMPORTANT
+        </p>
+        <p style={{ textAlign: 'center', fontSize: '10px', margin: '4px 0 0 0' }}>
           This ticket must be placed INSIDE the bag with garments
         </p>
       </div>
@@ -94,54 +116,61 @@ export const DualTicket: React.FC<DualTicketProps> = ({ order }) => {
   );
 
   return (
-    <div className="dual-ticket-container bg-white" style={{ width: '210mm', minHeight: '297mm', margin: '0 auto' }}>
+    <>
       <style>{`
         @media print {
           @page {
-            size: A4;
-            margin: 10mm;
+            size: A4 portrait;
+            margin: 15mm;
           }
 
-          body {
-            margin: 0;
-            padding: 0;
+          body * {
+            visibility: hidden;
           }
 
-          .dual-ticket-container {
+          .print-ticket-area,
+          .print-ticket-area * {
+            visibility: visible;
+          }
+
+          .print-ticket-area {
+            position: absolute;
+            left: 0;
+            top: 0;
             width: 100%;
-            height: 100%;
-            page-break-after: avoid;
-            display: flex;
-            flex-direction: column;
-            gap: 10mm;
-          }
-
-          .ticket-copy {
-            flex: 1;
-            page-break-inside: avoid;
           }
 
           .no-print {
             display: none !important;
           }
         }
-
-        @media screen {
-          .dual-ticket-container {
-            padding: 20px;
-          }
-        }
       `}</style>
 
-      <TicketCopy copyType="CUSTOMER" />
+      <div className="print-ticket-area">
+        <TicketCopy copyType="CUSTOMER" />
 
-      <div className="my-4 border-t-2 border-dashed border-gray-400 relative">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-xs text-gray-500">
-          ✂️ CUT HERE ✂️
+        <div style={{
+          margin: '16px 0',
+          borderTop: '2px dashed #999',
+          position: 'relative',
+          height: '20px'
+        }}>
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#fff',
+            padding: '0 16px',
+            fontSize: '10px',
+            color: '#666'
+          }}>
+            ✂️ CUT HERE ✂️
+          </div>
         </div>
-      </div>
 
-      <TicketCopy copyType="STAFF" />
-    </div>
+        <TicketCopy copyType="STAFF" />
+      </div>
+    </>
   );
 };
