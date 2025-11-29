@@ -11,7 +11,7 @@ interface PinEntryProps {
 }
 
 export const PinEntry: React.FC<PinEntryProps> = ({ onNext, onBack }) => {
-  const { mode, setSelectedCompany, setSelectedSite, setSitePin, setPinVerified } = useTicketStore();
+  const { mode, setCompany, setSite, setSitePin, setPinVerified } = useTicketStore();
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,13 +30,13 @@ export const PinEntry: React.FC<PinEntryProps> = ({ onNext, onBack }) => {
       const siteData = await api.loginWithPin(pin);
 
       // Set the site and company from the PIN login response
-      setSelectedSite({
+      setSite({
         id: siteData.id,
         name: siteData.name,
         address: siteData.address,
         companyId: siteData.companyId,
       });
-      setSelectedCompany(siteData.company);
+      setCompany(siteData.company);
       setSitePin(pin); // Store the verified PIN
       setPinVerified(true);
       onNext();
