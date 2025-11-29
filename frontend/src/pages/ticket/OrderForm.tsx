@@ -4,6 +4,7 @@ import { Input, TextArea } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { useTicketStore } from '../../stores/ticketStore';
 import { api, GarmentType } from '../../services/api';
+import { getGarmentEmoji } from '../../utils/garmentEmojis';
 
 interface OrderFormProps {
   onNext: () => void;
@@ -164,24 +165,42 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onNext, onBack }) => {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {garmentTypes.map((garment) => (
-                  <div
-                    key={garment.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
-                    <label htmlFor={`garment-${garment.id}`} className="font-medium flex-1">
-                      {garment.name}
-                    </label>
-                    <input
-                      id={`garment-${garment.id}`}
-                      type="number"
-                      min="0"
-                      value={garmentQuantities[garment.id] || 0}
-                      onChange={(e) => handleQuantityChange(garment.id, e.target.value)}
-                      className="w-20 px-3 py-2 border rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    />
-                  </div>
-                ))}
+                {garmentTypes.map((garment) => {
+                  const quantity = garmentQuantities[garment.id] || 0;
+                  const emoji = getGarmentEmoji(garment.name);
+
+                  return (
+                    <div
+                      key={garment.id}
+                      className="flex items-center justify-between p-3 border rounded-lg hover:border-primary-300 transition-colors"
+                    >
+                      <label className="font-medium flex-1 flex items-center gap-2">
+                        <span className="text-2xl">{emoji}</span>
+                        <span>{garment.name}</span>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setGarmentQuantity(garment.id, Math.max(0, quantity - 1))}
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 font-bold text-gray-700 transition-colors"
+                          disabled={quantity === 0}
+                        >
+                          −
+                        </button>
+                        <span className="w-8 text-center font-semibold text-lg">
+                          {quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setGarmentQuantity(garment.id, quantity + 1)}
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-600 hover:bg-primary-700 text-white font-bold transition-colors"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

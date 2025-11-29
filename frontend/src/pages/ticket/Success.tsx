@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from '../../components/Layout';
 import { Button } from '../../components/Button';
-import { Ticket } from '../../components/Ticket';
+import { DualTicket } from '../../components/DualTicket';
 import { useTicketStore } from '../../stores/ticketStore';
 import { api } from '../../services/api';
 
@@ -122,7 +122,7 @@ export const Success: React.FC<SuccessProps> = ({ onNewTicketSameSite, onChangeS
 
         {/* Hidden ticket for printing */}
         <div className="hidden print:block">
-          <Ticket order={createdOrder} />
+          <DualTicket order={createdOrder} />
         </div>
       </div>
     </Layout>

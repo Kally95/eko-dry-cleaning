@@ -17,7 +17,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, title, subtitle }) => 
           {title && <h2 className="text-2xl font-semibold text-gray-700 mb-2">{title}</h2>}
           {subtitle && <p className="text-gray-600">{subtitle}</p>}
         </div>
-        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <div className="bg-white rounded-xl p-6 md:p-8">
           {children}
         </div>
       </div>

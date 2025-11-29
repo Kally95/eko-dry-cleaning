@@ -13,7 +13,9 @@ interface TicketState {
   setSite: (site: Site) => void;
 
   // PIN
+  sitePin: string;
   pinVerified: boolean;
+  setSitePin: (pin: string) => void;
   setPinVerified: (verified: boolean) => void;
 
   // Order form data
@@ -42,6 +44,7 @@ const initialState = {
   mode: null,
   selectedCompany: null,
   selectedSite: null,
+  sitePin: '',
   pinVerified: false,
   customerName: '',
   customerPhone: '',
@@ -58,7 +61,9 @@ export const useTicketStore = create<TicketState>((set) => ({
 
   setCompany: (company) => set({ selectedCompany: company, selectedSite: null, pinVerified: false }),
 
-  setSite: (site) => set({ selectedSite: site, pinVerified: false }),
+  setSite: (site) => set({ selectedSite: site, sitePin: '', pinVerified: false }),
+
+  setSitePin: (pin) => set({ sitePin: pin }),
 
   setPinVerified: (verified) => set({ pinVerified: verified }),
 
@@ -95,6 +100,7 @@ export const useTicketStore = create<TicketState>((set) => ({
   resetToSiteSelection: () =>
     set({
       selectedSite: null,
+      sitePin: '',
       pinVerified: false,
       customerName: '',
       customerPhone: '',

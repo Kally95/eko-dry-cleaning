@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '../../components/Layout';
 import { Button } from '../../components/Button';
-import { Ticket } from '../../components/Ticket';
+import { DualTicket } from '../../components/DualTicket';
 import { useTicketStore } from '../../stores/ticketStore';
 import { api, GarmentType } from '../../services/api';
 
@@ -15,6 +15,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
     mode,
     selectedCompany,
     selectedSite,
+    sitePin,
     customerName,
     customerPhone,
     customerEmail,
@@ -115,7 +116,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
         createdBy: mode!,
         companyId: selectedCompany.id,
         siteId: selectedSite.id,
-        sitePin: '', // PIN already verified
+        sitePin: sitePin,
         customerName,
         customerPhone,
         customerEmail,
@@ -259,7 +260,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
         {/* Hidden ticket for printing */}
         {previewOrder && (
           <div className="hidden print:block">
-            <Ticket order={previewOrder} />
+            <DualTicket order={previewOrder} />
           </div>
         )}
       </div>

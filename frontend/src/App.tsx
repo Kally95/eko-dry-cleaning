@@ -26,7 +26,7 @@ function App() {
       <div className="fixed top-4 right-4 z-50 no-print">
         <button
           onClick={() => setMode(mode === 'ticket' ? 'admin' : 'ticket')}
-          className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors shadow-lg"
+          className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
         >
           {mode === 'ticket' ? 'Admin Login' : 'Back to Tickets'}
         </button>
