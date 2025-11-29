@@ -9,7 +9,12 @@ export const Ticket: React.FC<TicketProps> = ({ order }) => {
   const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="print-area bg-white p-8 max-w-2xl mx-auto">
+    <div className="print-area bg-white p-8 max-w-2xl mx-auto relative">
+      {/* Mini Reference Number - Top Right */}
+      <div className="absolute top-4 right-4 text-xs font-bold text-gray-600 border border-gray-400 px-2 py-1 rounded bg-gray-100">
+        {order.ticketReference}
+      </div>
+
       {/* Header */}
       <div className="border-b-4 border-gray-900 pb-4 mb-6">
         <h1 className="text-3xl font-bold text-center">EKO DRY CLEANING</h1>

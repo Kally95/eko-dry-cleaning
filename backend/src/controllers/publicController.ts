@@ -14,7 +14,13 @@ const createOrderSchema = z.object({
   sitePin: z.string(),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  customerPhone: z.string().min(1, 'Phone number is required'),
+  customerPhone: z.string()
+    .min(1, 'Phone number is required')
+    .regex(/^\d+$/, 'Phone number must contain only digits')
+    .regex(/^0/, 'UK phone number must start with 0')
+    .min(10, 'UK phone number must be at least 10 digits')
+    .max(11, 'UK phone number must be at most 11 digits')
+    .refine((val) => !/\s/.test(val), 'Phone number must not contain spaces'),
   customerEmail: z.string().email('Valid email is required'),
   notes: z.string().optional(),
   items: z.array(

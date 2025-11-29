@@ -5,6 +5,7 @@ import { Button } from '../../components/Button';
 import { useTicketStore } from '../../stores/ticketStore';
 import { api, GarmentType } from '../../services/api';
 import { getGarmentEmoji } from '../../utils/garmentEmojis';
+import { validateUKPhone, validateEmail } from '../../utils/validation';
 
 interface OrderFormProps {
   onNext: () => void;
@@ -57,20 +58,27 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onNext, onBack }) => {
   const validate = () => {
     const errors: Record<string, string> = {};
 
+    // Validate names
     if (!firstName.trim()) {
       errors.firstName = 'First name is required';
     }
     if (!lastName.trim()) {
       errors.lastName = 'Last name is required';
     }
-    if (!customerPhone.trim()) {
-      errors.customerPhone = 'Phone number is required';
+
+    // Validate UK phone number
+    const phoneValidation = validateUKPhone(customerPhone);
+    if (!phoneValidation.valid) {
+      errors.customerPhone = phoneValidation.error || 'Invalid phone number';
     }
-    if (!customerEmail.trim()) {
-      errors.customerEmail = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
-      errors.customerEmail = 'Please enter a valid email address';
+
+    // Validate email
+    const emailValidation = validateEmail(customerEmail);
+    if (!emailValidation.valid) {
+      errors.customerEmail = emailValidation.error || 'Invalid email address';
     }
+
+    // Validate items
     if (totalItems === 0) {
       errors.items = 'Please select at least one item';
     }
@@ -149,6 +157,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onNext, onBack }) => {
                   type="tel"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
+                  placeholder="07123456789"
                   error={validationErrors.customerPhone}
                   required
                 />

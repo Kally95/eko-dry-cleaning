@@ -209,18 +209,24 @@ export const Confirmation: React.FC<ConfirmationProps> = ({ onNext, onBack }) =>
           )}
         </div>
 
-        {/* Confirmation Checkbox */}
-        <div className="border-2 border-gray-300 rounded-lg p-4">
+        {/* Confirmation Checkbox - Emphasised with Caution Styling */}
+        <div className="border-3 border-amber-500 bg-amber-50 rounded-lg p-5">
           <label className="flex items-start space-x-3 cursor-pointer">
             <input
               type="checkbox"
               checked={confirmed}
               onChange={(e) => setConfirmed(e.target.checked)}
-              className="mt-1 h-5 w-5 text-primary-600 rounded focus:ring-2 focus:ring-primary-500"
+              className="mt-1 h-6 w-6 text-amber-600 rounded focus:ring-2 focus:ring-amber-500 flex-shrink-0"
             />
-            <span className="text-gray-900">
-              I confirm these details are correct and I will print the ticket and put it in the bag.
-            </span>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-2xl">⚠️</span>
+                <span className="font-bold text-amber-900 text-lg">Important Confirmation</span>
+              </div>
+              <span className="text-amber-900 font-semibold">
+                I confirm these details are correct and I will print the ticket and put it in the bag.
+              </span>
+            </div>
           </label>
         </div>
 

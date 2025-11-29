@@ -16,7 +16,13 @@ const loginSchema = z.object({
 const updateOrderSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  customerPhone: z.string().optional(),
+  customerPhone: z.string()
+    .regex(/^\d+$/, 'Phone number must contain only digits')
+    .regex(/^0/, 'UK phone number must start with 0')
+    .min(10, 'UK phone number must be at least 10 digits')
+    .max(11, 'UK phone number must be at most 11 digits')
+    .refine((val) => !/\s/.test(val), 'Phone number must not contain spaces')
+    .optional(),
   customerEmail: z.string().email().optional(),
   notes: z.string().optional(),
   status: z.enum(['SUBMITTED', 'IN_CLEANING', 'READY_FOR_COLLECTION', 'COLLECTED', 'CANCELLED']).optional(),

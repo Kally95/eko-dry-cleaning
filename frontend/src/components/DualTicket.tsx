@@ -12,8 +12,25 @@ export const DualTicket: React.FC<DualTicketProps> = ({ order }) => {
     <div className="ticket-copy" style={{
       border: '2px solid #000',
       padding: '16px',
-      pageBreakInside: 'avoid'
+      pageBreakInside: 'avoid',
+      position: 'relative'
     }}>
+      {/* Mini Reference Number - Top Right */}
+      <div style={{
+        position: 'absolute',
+        top: '8px',
+        right: '8px',
+        fontSize: '9px',
+        fontWeight: 'bold',
+        color: '#666',
+        border: '1px solid #999',
+        padding: '3px 6px',
+        borderRadius: '3px',
+        backgroundColor: '#f5f5f5'
+      }}>
+        {order.ticketReference}
+      </div>
+
       {/* Header */}
       <div style={{ borderBottom: '2px solid #000', paddingBottom: '8px', marginBottom: '12px' }}>
         <h1 style={{ fontSize: '20px', fontWeight: 'bold', textAlign: 'center', margin: 0 }}>
